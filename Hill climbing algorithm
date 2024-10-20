@@ -1,0 +1,49 @@
+import random
+import networkx as nx
+import matplotlib.pyplot as plt
+
+graph = {
+    'A': {'B': 1, 'C': 4},
+    'B': {'C': 2, 'D': 5},
+    'C': {'D': 1},
+    'D': {}
+}
+
+def hill_climb_path(graph, start, goal):
+    current_node = start
+    path = [current_node]
+    total_cost = 0
+
+    while current_node != goal:
+        neighbors = graph[current_node]
+        if not neighbors:
+            print('No available moves from', current_node)
+            return path, float('inf')
+        next_node = min(neighbors, key=neighbors.get)
+        next_cost = neighbors[next_node]
+        print(f"Moving from {current_node} to {next_node} with cost {next_cost}")
+        path.append(next_node)
+        total_cost += next_cost
+        current_node = next_node
+    return path, total_cost
+
+start_node = 'A'
+goal_node = 'D'  
+path, cost = hill_climb_path(graph, start_node, goal_node)
+print(f"Final path: {path}, Total cost: {cost}")
+
+def plot_graph(graph, path):
+    G = nx.DiGraph()
+    for node, edges in graph.items():
+        for neighbor, weight in edges.items():
+            G.add_edge(node, neighbor, weight=weight)
+    pos = nx.spring_layout(G)  
+    labels = nx.get_edge_attributes(G, 'weight')
+
+    nx.draw(G, pos, with_labels=True, node_size=700, node_color='lightblue', font_size=10)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+    path_edges = [(path[i], path[i + 1]) for i in range(len(path) - 1)]
+    nx.draw_networkx_edges(G, pos, edgelist=path_edges, edge_color='blue', width=2)
+    plt.title("Graph Visualization with Path Highlighted")
+    plt.show()
+plot_graph(graph, path)

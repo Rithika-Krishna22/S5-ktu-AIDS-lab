@@ -10,7 +10,6 @@ x=data.data
 y=data.target
 x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=42)
 clf=SVC(kernel='linear')
-
 scaler=StandardScaler()
 x_train=scaler.fit_transform(x_train)
 x_test=scaler.transform(x_test)
@@ -23,5 +22,3 @@ sns.heatmap(conf,annot=True,cmap='Blues',xticklabels=data.target_names,yticklabe
 plt.xlabel('Predicted values')
 plt.ylabel('Actual values')
 plt.show()
-
-
